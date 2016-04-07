@@ -346,6 +346,17 @@ namespace WindowsFormsApplication1
             msg.Seq = 0;
             _mMavLink.SendMessage(msg);
         }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            var msg = new UasSetMode
+            {
+                BaseMode = 1,
+                CustomMode = 0
+            };
+
+            _mMavLink.SendMessage(msg);
+        }
     }
 
 }
