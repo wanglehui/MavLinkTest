@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mavlink">
-      <HintPath>..\..\..\mavlink.net\mavlink.net\bin\Debug\mavlink.dll</HintPath>
+      <HintPath>..\..\mavlink.net\mavlink.net\bin\Debug\mavlink.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

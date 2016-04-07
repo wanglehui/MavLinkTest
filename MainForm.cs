@@ -55,8 +55,7 @@ namespace WindowsFormsApplication1
 
         private void PrintCommandLong(UasCommandLong m)
         {
-            UasMessageMetadata md = m.GetMetadata();
-
+            var md = m.GetMetadata();
             WL("{0}: {1}", m, md.Description);
 
             foreach (UasFieldMetadata f in md.Fields)
@@ -78,7 +77,7 @@ namespace WindowsFormsApplication1
             int paramIndex;
             if (!Int32.TryParse(paramIndexString, out paramIndex)) return "";
 
-            foreach (UasEnumEntryMetadata entry in UasSummary.GetEnumMetadata("MavCmd").Entries)
+            foreach (var entry in UasSummary.GetEnumMetadata("MavCmd").Entries)
             {
                 if (command != entry.Value) continue;
 
@@ -178,8 +177,18 @@ namespace WindowsFormsApplication1
         }
 
         private void button5_Click(object sender, EventArgs e)
-        {            
-            var cmd = new UasCommandLong {Command = MavCmd.GetHomePosition};
+        {
+            var cmd = new UasCommandLong
+            {
+                Command = MavCmd.GetHomePosition,
+                Param1 = 0,
+                Param2 = 0,
+                Param3 = 0,
+                Param4 = 0,
+                Param5 = 0,
+                Param6 = 0,
+                Param7 = 0
+            };
 
             _mMavLink.SendMessage(cmd);
         }
@@ -266,7 +275,12 @@ namespace WindowsFormsApplication1
             <param index="6">Longitude</param>
             <param index="7">Altitude</param>
              */
-            var msg = new UasSetHomePosition {Latitude = 0};
+            var msg = new UasSetHomePosition
+            {
+                Latitude = 0,
+                Altitude = 100,
+                Longitude = 0
+            };
 
             _mMavLink.SendMessage(msg);
         }
@@ -302,6 +316,23 @@ namespace WindowsFormsApplication1
                 Command = MavCmd.NavWaypoint
             };
             _mMavLink.SendMessage(msg2);
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            var cmd = new UasCommandLong
+            {
+                Command = MavCmd.NavTakeoff,
+                Param1 = 0,
+                Param2 = 0,
+                Param3 = 0,
+                Param4 = 0,
+                Param5 = 0,
+                Param6 = 0,
+                Param7 = 0
+            };
+
+            _mMavLink.SendMessage(cmd);
         }
     }
 

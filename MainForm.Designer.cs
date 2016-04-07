@@ -40,6 +40,7 @@
             this.button10 = new System.Windows.Forms.Button();
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -66,7 +67,7 @@
             // 
             this.button3.Location = new System.Drawing.Point(120, 12);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(147, 23);
+            this.button3.Size = new System.Drawing.Size(161, 27);
             this.button3.TabIndex = 3;
             this.button3.Text = "ParamRequestList";
             this.button3.UseVisualStyleBackColor = true;
@@ -74,9 +75,9 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(120, 51);
+            this.button4.Location = new System.Drawing.Point(120, 250);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(147, 23);
+            this.button4.Size = new System.Drawing.Size(161, 23);
             this.button4.TabIndex = 4;
             this.button4.Text = "ClearAllWp";
             this.button4.UseVisualStyleBackColor = true;
@@ -84,9 +85,9 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(120, 92);
+            this.button5.Location = new System.Drawing.Point(120, 108);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(147, 23);
+            this.button5.Size = new System.Drawing.Size(161, 27);
             this.button5.TabIndex = 5;
             this.button5.Text = "GetHomePosition";
             this.button5.UseVisualStyleBackColor = true;
@@ -94,9 +95,9 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(12, 215);
+            this.button6.Location = new System.Drawing.Point(120, 175);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(177, 33);
+            this.button6.Size = new System.Drawing.Size(161, 27);
             this.button6.TabIndex = 6;
             this.button6.Text = "ReqDataStream-Close";
             this.button6.UseVisualStyleBackColor = true;
@@ -104,9 +105,9 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(12, 265);
+            this.button7.Location = new System.Drawing.Point(120, 208);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(177, 33);
+            this.button7.Size = new System.Drawing.Size(161, 27);
             this.button7.TabIndex = 7;
             this.button7.Text = "ReqDataStream-Open";
             this.button7.UseVisualStyleBackColor = true;
@@ -114,9 +115,9 @@
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(120, 160);
+            this.button8.Location = new System.Drawing.Point(120, 41);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(147, 23);
+            this.button8.Size = new System.Drawing.Size(161, 27);
             this.button8.TabIndex = 8;
             this.button8.Text = "GetVersion";
             this.button8.UseVisualStyleBackColor = true;
@@ -124,9 +125,9 @@
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(12, 323);
+            this.button9.Location = new System.Drawing.Point(120, 70);
             this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(177, 33);
+            this.button9.Size = new System.Drawing.Size(161, 27);
             this.button9.TabIndex = 9;
             this.button9.Text = "Report GCS";
             this.button9.UseVisualStyleBackColor = true;
@@ -134,9 +135,9 @@
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(120, 121);
+            this.button10.Location = new System.Drawing.Point(120, 131);
             this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(147, 23);
+            this.button10.Size = new System.Drawing.Size(161, 27);
             this.button10.TabIndex = 10;
             this.button10.Text = "SetHomePosition";
             this.button10.UseVisualStyleBackColor = true;
@@ -144,9 +145,9 @@
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(12, 395);
+            this.button11.Location = new System.Drawing.Point(120, 279);
             this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(177, 33);
+            this.button11.Size = new System.Drawing.Size(161, 23);
             this.button11.TabIndex = 11;
             this.button11.Text = "GetMission ITEM";
             this.button11.UseVisualStyleBackColor = true;
@@ -154,19 +155,30 @@
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(12, 434);
+            this.button12.Location = new System.Drawing.Point(120, 308);
             this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(177, 33);
+            this.button12.Size = new System.Drawing.Size(161, 23);
             this.button12.TabIndex = 12;
             this.button12.Text = "SetMission ITEM";
             this.button12.UseVisualStyleBackColor = true;
             this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
-            // Form1
+            // button13
+            // 
+            this.button13.Location = new System.Drawing.Point(12, 92);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(75, 23);
+            this.button13.TabIndex = 13;
+            this.button13.Text = "Takeoff";
+            this.button13.UseVisualStyleBackColor = true;
+            this.button13.Click += new System.EventHandler(this.button13_Click);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(325, 514);
+            this.ClientSize = new System.Drawing.Size(305, 371);
+            this.Controls.Add(this.button13);
             this.Controls.Add(this.button12);
             this.Controls.Add(this.button11);
             this.Controls.Add(this.button10);
@@ -179,7 +191,7 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
@@ -200,6 +212,7 @@
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button button13;
     }
 }
 
