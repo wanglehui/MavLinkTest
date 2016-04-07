@@ -116,8 +116,13 @@ namespace WindowsFormsApplication1
                 var hb = (UasHeartbeat) m;
                 WL("Heartbeat: {0} {1}", hb.Autopilot, hb.Type);
             }
-            else if (m is UasMissionItem || m is UasMissionCount || m is UasMissionRequest)
+            else if (m is UasMissionItem 
+                || m is UasMissionCount 
+                || m is UasMissionRequest
+                || m is UasMissionCurrent)
             {
+                var substring = m.GetType().ToString().Remove(0, 14);//remove prefix: "MavLinkNet.Uas"
+                WL("MSG: {0}", substring);
                 DumpMsgMeta(m);
             }
             else
@@ -333,6 +338,13 @@ namespace WindowsFormsApplication1
             };
 
             _mMavLink.SendMessage(cmd);
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            var msg = new UasMissionSetCurrent();
+            msg.Seq = 0;
+            _mMavLink.SendMessage(msg);
         }
     }
 
