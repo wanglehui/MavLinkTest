@@ -27,7 +27,15 @@ namespace WindowsFormsApplication1
 
 
             _mMavLink.OnPacketReceived += OnMavLinkPacketReceived;
-            _mMavLink.Initialize();
+            try
+            {
+                _mMavLink.Initialize();
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            
             _mMavLink.BeginHeartBeatLoop();
 
             button1.Enabled = false;
@@ -123,6 +131,10 @@ namespace WindowsFormsApplication1
             {
                 var substring = m.GetType().ToString().Remove(0, 14);//remove prefix: "MavLinkNet.Uas"
                 WL("MSG: {0}", substring);
+                DumpMsgMeta(m);
+            }
+            else if (m is UasParamValue)
+            {
                 DumpMsgMeta(m);
             }
             else
@@ -244,7 +256,7 @@ namespace WindowsFormsApplication1
             var msg = new UasRequestDataStream
             {
                 StartStop = 1,
-                ReqStreamId = 0,
+                ReqStreamId = 3,
                 ReqMessageRate = 100,
             };
             _mMavLink.SendMessage(msg);
@@ -299,28 +311,52 @@ namespace WindowsFormsApplication1
         private void button11_Click(object sender, EventArgs e)
         {
             var msg1 = new UasMissionRequestList();
+            MyShell.WriteLine("警告" + "Send UasMissionRequestList");
             _mMavLink.SendMessage(msg1);
+
+            Thread.Sleep(500);
+            MyShell.WriteLine("警告" + "Send UasMissionRequest");
+            var msg2 = new UasMissionRequest {Seq = 0};
+            _mMavLink.SendMessage(msg2);
+
+            //var msg1 = new UasMissionItem {Seq = 1};
+            //_mMavLink.SendMessage(msg1);
         }
 
         private void button12_Click(object sender, EventArgs e)
         {
-            var msg = new UasMissionCount {Count = 2};
+            var msg = new UasMissionCount {Count = 1};
             _mMavLink.SendMessage(msg);
+            Thread.Sleep(500);
 
-            var msg2 = new UasMissionItem
+            var msg1 = new UasMissionItemInt
             {
                 Seq = 0,
-                Command = MavCmd.NavTakeoff
+                Command = MavCmd.NavWaypoint,
+                X = 7900004,
+                Y = 3400004
             };
-            _mMavLink.SendMessage(msg2);
-
+            _mMavLink.SendMessage(msg1);
             Thread.Sleep(500);
-            msg2 = new UasMissionItem
-            {
-                Seq = 1,
-                Command = MavCmd.NavWaypoint
-            };
-            _mMavLink.SendMessage(msg2);
+
+            //var msg2 = new UasMissionItem
+            //{
+            //    Seq = 1,
+            //    Command = MavCmd.NavTakeoff,
+            //    X = 79,
+            //    Y = 34
+            //};
+            //_mMavLink.SendMessage(msg2);
+            Thread.Sleep(500);
+            
+            //msg2 = new UasMissionItem
+            //{
+            //    Seq = 2,
+            //    Command = MavCmd.NavWaypoint,
+            //    X = 79.0002f,
+            //    Y = 34.0002f
+            //};
+            //_mMavLink.SendMessage(msg2);
         }
 
         private void button13_Click(object sender, EventArgs e)
@@ -342,8 +378,7 @@ namespace WindowsFormsApplication1
 
         private void button14_Click(object sender, EventArgs e)
         {
-            var msg = new UasMissionSetCurrent();
-            msg.Seq = 0;
+            var msg = new UasMissionSetCurrent {Seq = 0};
             _mMavLink.SendMessage(msg);
         }
 
@@ -356,6 +391,46 @@ namespace WindowsFormsApplication1
             };
 
             _mMavLink.SendMessage(msg);
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            var msg1 = new UasMissionItem
+            {
+                Seq = 2,
+                Command = MavCmd.NavWaypoint,
+                X = 43.39101f,
+                Y = 46.74377f,
+                Z = 300
+            };
+            _mMavLink.SendMessage(msg1);
+            //Thread.Sleep(500);
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            //Set Parameter
+            char[] paramId = "WPNAV_SPEED_UP".ToCharArray();
+            Array.Resize(ref paramId, 16);
+
+            var paramSet = new UasParamSet
+            {
+                ParamId = paramId,
+                ParamType = MavParamType.Int32,
+                ParamValue = 345
+            };
+
+            _mMavLink.SendMessage(paramSet);
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            //Get Parameter
         }
     }
 
