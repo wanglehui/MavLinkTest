@@ -20,7 +20,7 @@ namespace WindowsFormsApplication1
             _mMavLink = new MavLinkSerialPortTransport
             {
                 BaudRate = 115200,
-                SerialPortName = "COM10",                
+                SerialPortName = "COM4",                
                 MavlinkSystemId = 0xFF,
                 MavlinkComponentId = 0xBE
             };
@@ -119,15 +119,25 @@ namespace WindowsFormsApplication1
             {
                 WL("PowerStatus: {0}", ((UasPowerStatus)m).Vcc);
             }
+            else if (m is UasHomePosition)
+            {
+                WL("**********HomePosition: {0}", ((UasHomePosition)m).X);
+            }
             else if (m is UasHeartbeat)
             {
                 var hb = (UasHeartbeat) m;
                 WL("Heartbeat: {0} {1}", hb.Autopilot, hb.Type);
             }
+            else if (m is UasLogEntry)
+            {
+                var log = (UasLogEntry)m;
+                WL("UasLogEntry: {0} {1} {2}", log.Id, log.NumLogs, log.LastLogNum);
+            }
             else if (m is UasMissionItem 
                 || m is UasMissionCount 
                 || m is UasMissionRequest
-                || m is UasMissionCurrent)
+                || m is UasMissionCurrent
+                || m is UasLogData)
             {
                 var substring = m.GetType().ToString().Remove(0, 14);//remove prefix: "MavLinkNet.Uas"
                 WL("MSG: {0}", substring);
@@ -135,7 +145,20 @@ namespace WindowsFormsApplication1
             }
             else if (m is UasParamValue)
             {
+                WL("MSG: UasParamValue");
                 DumpMsgMeta(m);
+                /*
+                var md = m.GetMetadata();
+                var sb = new StringBuilder();                
+                foreach (var f in md.Fields)
+                {
+                    sb.AppendLine(string.Format("  {0}: {1}  ({2})", 
+                        f.Name, 
+                        GetFieldValue(f.Name, m), 
+                        f.Description));
+                }
+                File.AppendAllText("UasParamValue.txt", sb.ToString());
+                */
             }
             else
             {                
@@ -198,13 +221,6 @@ namespace WindowsFormsApplication1
             var cmd = new UasCommandLong
             {
                 Command = MavCmd.GetHomePosition,
-                Param1 = 0,
-                Param2 = 0,
-                Param3 = 0,
-                Param4 = 0,
-                Param5 = 0,
-                Param6 = 0,
-                Param7 = 0
             };
 
             _mMavLink.SendMessage(cmd);
@@ -415,14 +431,13 @@ namespace WindowsFormsApplication1
         private void button18_Click(object sender, EventArgs e)
         {
             //Set Parameter
-            char[] paramId = "WPNAV_SPEED_UP".ToCharArray();
+            char[] paramId = "WPNAV_SPEED".ToCharArray();
             Array.Resize(ref paramId, 16);
 
             var paramSet = new UasParamSet
             {
                 ParamId = paramId,
-                ParamType = MavParamType.Int32,
-                ParamValue = 345
+                ParamValue = 345.67f
             };
 
             _mMavLink.SendMessage(paramSet);
@@ -430,7 +445,61 @@ namespace WindowsFormsApplication1
 
         private void button17_Click(object sender, EventArgs e)
         {
+            char[] paramId = "FLTMODE6".ToCharArray();
+            Array.Resize(ref paramId, 16);
+
             //Get Parameter
+            unchecked
+            {
+                var paramgGet = new UasParamRequestRead
+                {
+                    ParamId = paramId,
+                    ParamIndex = (short)65535,
+                };
+                _mMavLink.SendMessage(paramgGet);
+            }
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            var msg = new UasDigicamControl {Shot = 1};
+            _mMavLink.SendMessage(msg);
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {            
+            var msg = _mMavLink.UavState.Get("FLTMODE6");
+            DumpMsgMeta(msg);
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            // 下载日志
+            var msg = new UasLogRequestList
+            {
+                Start = 0,
+                End = 0xFFFF
+            };
+
+            _mMavLink.SendMessage(msg);
+        }
+
+        private void button22_Click(object sender, EventArgs e)
+        {
+            var msg = new UasLogRequestData
+            {
+                Id = 4,
+                Count = 100,
+                Ofs = 0
+            };
+
+            _mMavLink.SendMessage(msg);
+        }
+
+        private void button23_Click(object sender, EventArgs e)
+        {
+            var msg = new UasLogErase();
+            _mMavLink.SendMessage(msg);
         }
     }
 
