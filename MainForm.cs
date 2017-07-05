@@ -5,7 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 using MavLinkNet;
 
-namespace WindowsFormsApplication1
+namespace MavLinkTest
 {
     public partial class MainForm : Form
     {
@@ -17,22 +17,25 @@ namespace WindowsFormsApplication1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _mMavLink = new MavLinkSerialPortTransport
-            {
-                BaudRate = 115200,
-                SerialPortName = "COM4",
-                MavlinkSystemId = 0xFF,
-                MavlinkComponentId = 0xBE
-            };
+            if (string.IsNullOrEmpty(mCbxPort.Text)) return;
+            if (string.IsNullOrEmpty(mCbxBandrate.Text)) return;
 
-
-            _mMavLink.OnPacketReceived += OnMavLinkPacketReceived;
             try
             {
+                _mMavLink = new MavLinkSerialPortTransport
+                {
+                    BaudRate = Convert.ToInt32(mCbxBandrate.Text),
+                    SerialPortName = mCbxPort.Text,
+                    MavlinkSystemId = 0xFF,
+                    MavlinkComponentId = 0xBE
+                };
+
+                _mMavLink.OnPacketReceived += OnMavLinkPacketReceived;
                 _mMavLink.Initialize();
             }
             catch (Exception)
             {
+                MessageBox.Show(@"通信接口初始化失败！");
                 return;
             }
 
@@ -147,6 +150,11 @@ namespace WindowsFormsApplication1
             {
                 var substring = m.GetType().ToString().Remove(0, 14);//remove prefix: "MavLinkNet.Uas"
                 WL("MSG: {0}", substring);
+                DumpMsgMeta(m);
+            }
+            else if (m is UasAutopilotVersion)
+            {
+                WL("MSG: UasAutopilotVersion");
                 DumpMsgMeta(m);
             }
             else if (m is UasParamValue)
@@ -278,8 +286,8 @@ namespace WindowsFormsApplication1
             var msg = new UasRequestDataStream
             {
                 StartStop = 1,
-                ReqStreamId = 10,
-                ReqMessageRate = 500,
+                ReqStreamId = 12,
+                ReqMessageRate = 5
             };
             _mMavLink.SendMessage(msg);
         }
@@ -347,7 +355,7 @@ namespace WindowsFormsApplication1
 
         private void button12_Click(object sender, EventArgs e)
         {
-            var msg = new UasMissionCount {Count = 1};
+            var msg = new UasMissionCount {Count = 2};
             _mMavLink.SendMessage(msg);
             Thread.Sleep(500);
 
@@ -356,19 +364,21 @@ namespace WindowsFormsApplication1
                 Seq = 0,
                 Command = MavCmd.NavWaypoint,
                 X = 7900004,
-                Y = 3400004
+                Y = 3400004,
+                Frame = MavFrame.GlobalRelativeAlt
             };
             _mMavLink.SendMessage(msg1);
             Thread.Sleep(500);
 
-            //var msg2 = new UasMissionItem
-            //{
-            //    Seq = 1,
-            //    Command = MavCmd.NavTakeoff,
-            //    X = 79,
-            //    Y = 34
-            //};
-            //_mMavLink.SendMessage(msg2);
+            var msg2 = new UasMissionItemInt
+            {
+                Seq = 1,
+                Command = MavCmd.NavTakeoff,
+                X = 7900005,
+                Y = 3400005,
+                Frame = MavFrame.GlobalRelativeAlt
+            };
+            _mMavLink.SendMessage(msg2);
             Thread.Sleep(500);
 
             //msg2 = new UasMissionItem
@@ -506,6 +516,16 @@ namespace WindowsFormsApplication1
         {
             var msg = new UasLogErase();
             _mMavLink.SendMessage(msg);
+        }
+
+        private void button24_Click(object sender, EventArgs e)
+        {
+            var cmd = new UasCommandLong
+            {
+                Command = MavCmd.DoParachute,
+                Param1 = 2
+            };
+            _mMavLink.SendMessage(cmd);
         }
     }
 
